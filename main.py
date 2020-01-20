@@ -77,68 +77,74 @@ async def test_containing_db(loop):
 async def main(loop):
 
     aio_jikan = AioJikan(loop=loop)
-    
-    year = 2019
-    season = 'spring'
-    season_year = await aio_jikan.season(year=year, season=season)
+
+    seasons = ['winter', 'spring', 'summer', 'fall']
+
     root_url = 'https://sovetromantica.com'
     apiSesson = ApiClient()
-    await apiSesson.login('admin', '123456')
+    await apiSesson.login('silverlynxx', '123456')
+    
+    # year = 2019
+    # season = 'spring'
+    for year in range(1990, 2021):
+        for season in seasons:
+            season_year = await aio_jikan.season(year=year, season=season)
 
-    season_anime = season_year['anime']
-    for anime in season_anime:
-        print('\n',anime['title'])
-        embed_links_sub, embed_links_dub = await parse_sovetromantica(anime['title'], 'anime')
-        for link in embed_links_sub:
-            num = int(re.findall(r'_(\d*?)-subtitles', link)[-1])
-            num_len = len(str(num))
-            ep_num = ''
-            if num_len == 1:
-                ep_num = f'e00{num}'
-            if num_len == 2:
-                ep_num = f'e0{num}'
-            if num_len == 3:
-                ep_num = f'e{num}'
-            record_headline = f'{anime["title"]} ({ep_num}) (sub) [sovetromantica]'
-            record_text = f'{anime["title"]} ({ep_num}) [{season} {year}]'
-            tags = []
-            tags.append(('_'.join(re.findall(r'\W?(\w+)\W?', anime['title']))).lower())
-            tags.append(str(year))
-            tags.append(f'{season}_{year}')
-            tags.append('sub')
-            tags.append(ep_num)
-            record_resp = await apiSesson.create_record(record_headline, record_text, tags)
-            recordid = record_resp[0]['data']['recordid']
-            media_data = {'url': f'{root_url}{link}'}
-            media_type = 'embedded_video'
-            media_description = f'{anime["title"]} ({ep_num}) (sub) [sovetromantica]'
-            media_resp = await apiSesson.set_record_media(recordid, media_data, media_type, media_description)
-        for link in embed_links_dub:
-            num = int(re.findall(r'_(\d*?)-dubbed', link)[-1])
-            num_len = len(str(num))
-            ep_num = ''
-            if num_len == 1:
-                ep_num = f'e00{num}'
-            if num_len == 2:
-                ep_num = f'e0{num}'
-            if num_len == 3:
-                ep_num = f'e{num}'
-            record_headline = f'{anime["title"]} ({ep_num}) (dub) [sovetromantica]'
-            record_text = f'{anime["title"]} ({ep_num}) [{season} {year}]'
-            tags = []
-            tags.append(('_'.join(re.findall(r'\W?(\w+)\W?', anime['title']))).lower())
-            tags.append(str(year))
-            tags.append(f'{season}_{year}')
-            tags.append('dub')
-            tags.append(ep_num)
-            record_resp = await apiSesson.create_record(record_headline, record_text, tags)
-            recordid = record_resp[0]['data']['recordid']
-            media_data = {'url': f'{root_url}{link}'}
-            media_type = 'embedded_video'
-            media_description = f'{anime["title"]} ({ep_num}) (dub) [sovetromantica]'
-            media_resp = await apiSesson.set_record_media(recordid, media_data, media_type, media_description)
+            season_anime = season_year['anime']
+            for anime in season_anime:
+                print('\n',anime['title'])
+                embed_links_sub, embed_links_dub = await parse_sovetromantica(anime['title'], 'anime')
+                for link in embed_links_sub:
+                    num = int(re.findall(r'_(\d*?)-subtitles', link)[-1])
+                    num_len = len(str(num))
+                    ep_num = ''
+                    if num_len == 1:
+                        ep_num = f'e00{num}'
+                    if num_len == 2:
+                        ep_num = f'e0{num}'
+                    if num_len == 3:
+                        ep_num = f'e{num}'
+                    record_headline = f'{anime["title"]} ({ep_num}) (sub) [sovetromantica]'
+                    record_text = f'{anime["title"]} ({ep_num}) [{season} {year}]'
+                    tags = []
+                    tags.append(('_'.join(re.findall(r'\W?(\w+)\W?', anime['title']))).lower())
+                    tags.append(str(year))
+                    tags.append(f'{season}_{year}')
+                    tags.append('sub')
+                    tags.append(ep_num)
+                    record_resp = await apiSesson.create_record(record_headline, record_text, tags)
+                    recordid = record_resp[0]['data']['recordid']
+                    media_data = {'url': f'{root_url}{link}'}
+                    media_type = 'embedded_video'
+                    media_description = f'{anime["title"]} ({ep_num}) (sub) [sovetromantica]'
+                    media_resp = await apiSesson.set_record_media(recordid, media_data, media_type, media_description)
+                for link in embed_links_dub:
+                    num = int(re.findall(r'_(\d*?)-dubbed', link)[-1])
+                    num_len = len(str(num))
+                    ep_num = ''
+                    if num_len == 1:
+                        ep_num = f'e00{num}'
+                    if num_len == 2:
+                        ep_num = f'e0{num}'
+                    if num_len == 3:
+                        ep_num = f'e{num}'
+                    record_headline = f'{anime["title"]} ({ep_num}) (dub) [sovetromantica]'
+                    record_text = f'{anime["title"]} ({ep_num}) [{season} {year}]'
+                    tags = []
+                    tags.append(('_'.join(re.findall(r'\W?(\w+)\W?', anime['title']))).lower())
+                    tags.append(str(year))
+                    tags.append(f'{season}_{year}')
+                    tags.append('dub')
+                    tags.append(ep_num)
+                    record_resp = await apiSesson.create_record(record_headline, record_text, tags)
+                    recordid = record_resp[0]['data']['recordid']
+                    media_data = {'url': f'{root_url}{link}'}
+                    media_type = 'embedded_video'
+                    media_description = f'{anime["title"]} ({ep_num}) (dub) [sovetromantica]'
+                    media_resp = await apiSesson.set_record_media(recordid, media_data, media_type, media_description)
 
-    await aio_jikan.close()
+            await aio_jikan.close()
+    await apiSesson.close()
 
 
 if __name__ == '__main__':
