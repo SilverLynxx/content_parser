@@ -1,0 +1,13 @@
+aiohttp==3.6.2
+async-timeout==3.0.1
+asyncpg==0.20.1
+attrs==19.3.0
+certifi==2019.11.28
+chardet==3.0.4
+idna==2.8
+jikanpy==3.4.2
+multidict==4.7.4
+PyPika==0.35.19
+requests==2.22.0
+urllib3==1.25.7
+yarl==1.4.2
